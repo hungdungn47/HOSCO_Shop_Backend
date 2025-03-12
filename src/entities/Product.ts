@@ -1,5 +1,4 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
-import { ProductCategory } from "./ProductCategory";
 import { ProductBatch } from "./ProductBatch";
 import { TransactionItem } from "./TransactionItem";
 
@@ -37,7 +36,7 @@ export class Product {
   @Column({ default: 0 })
   discount: number
 
-  @Column({ type: "enum", enum: DiscountUnit, default: DiscountUnit.PERCENTAGE })
+  @Column({ type: "varchar", enum: DiscountUnit, default: DiscountUnit.PERCENTAGE })
   discountUnit: string
 
   @OneToMany(() => ProductBatch, (batch) => batch.product)

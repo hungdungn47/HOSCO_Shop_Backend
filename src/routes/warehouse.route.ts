@@ -9,4 +9,4 @@ router.post("/", WarehouseController.create);
 router.put("/:id", WarehouseController.update);
 router.delete("/:id", WarehouseController.delete);
 
-export default router;
+export const warehouseRouter = router;

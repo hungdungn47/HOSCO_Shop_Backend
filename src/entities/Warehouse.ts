@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
+import { ProductBatch } from "./ProductBatch";
 
 @Entity()
 export class Warehouse {
@@ -10,4 +11,7 @@ export class Warehouse {
 
   @Column()
   location: string;
+
+  @OneToMany(() => ProductBatch, (batch) => batch.warehouse)
+  batches: ProductBatch[];
 }

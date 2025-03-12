@@ -27,7 +27,7 @@ export class Partner {
   address: string
 
   @Column({
-    type: "enum",
+    type: "varchar",
     enum: PartnerRole,
     default: PartnerRole.RETAIL_CUSTOMER,
   })

@@ -22,7 +22,7 @@ export class TransactionItem {
   @Column({ default: 0 })
   discount: number
 
-  @Column({ type: "enum", enum: DiscountUnit, default: DiscountUnit.PERCENTAGE })
+  @Column({ type: "varchar", enum: DiscountUnit })
   discountUnit: string
 
   @Column()

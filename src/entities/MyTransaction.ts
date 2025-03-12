@@ -22,7 +22,7 @@ export class MyTransaction {
   @Column("date")
   transactionDate: Date;
 
-  @Column({ type: "enum", enum: TransactionType, default: TransactionType.SALE })
+  @Column({ type: "varchar", enum: TransactionType, default: TransactionType.SALE })
   type: string
 
   @Column("decimal", { precision: 10, scale: 2 })
@@ -34,8 +34,8 @@ export class MyTransaction {
   @Column({ default: 0 })
   discount: number
 
-  @Column({ type: "enum", enum: DiscountUnit, default: DiscountUnit.PERCENTAGE })
-  discountUnit: string
+  @Column({ type: "varchar", enum: DiscountUnit })
+  discountUnit: DiscountUnit
 
   @ManyToOne(() => Partner, (partner) => partner.transactions, { nullable: true })
   partner: Partner;

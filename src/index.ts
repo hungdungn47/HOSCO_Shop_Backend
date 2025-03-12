@@ -4,7 +4,7 @@ import cors from 'cors';
 import env from 'dotenv';
 import bodyParser from "body-parser";
 import { AppDataSource } from "./config/datasource";
-import warehouseRoute from './routes/warehouse.route';
+import router from './routes'
 
 env.config();
 
@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser());
 
-app.use('/api/warehouses', warehouseRoute)
+app.use('/api/v1', router)
 
 AppDataSource.initialize()
   .then(() => {
