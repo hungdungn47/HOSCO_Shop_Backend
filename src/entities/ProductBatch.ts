@@ -18,8 +18,11 @@ export class ProductBatch {
   @Column("decimal", { precision: 10, scale: 2 })
   purchasePrice: number;
 
-  @Column("text")
+  @Column("text", { nullable: true })
   purchaseNote: string;
+
+  @Column({ type: "int", default: 0 })
+  batchQuantity: number;
 
   @ManyToOne(() => Product, (product) => product.batches)
   product: Product;
