@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { ProductBatch } from "./ProductBatch";
 import { TransactionItem } from "./TransactionItem";
+import { WarehouseStock } from "./WarehouseStock";
 
 export enum DiscountUnit { VND = 'vnd', PERCENTAGE = 'percentage' }
 
@@ -44,4 +45,7 @@ export class Product {
 
   @OneToMany(() => TransactionItem, (item) => item.product)
   transactionItems: TransactionItem[]
+
+  @OneToMany(() => WarehouseStock, (item) => item.product)
+  stock: WarehouseStock
 }

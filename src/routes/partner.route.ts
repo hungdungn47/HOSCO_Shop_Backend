@@ -5,7 +5,7 @@ const partnerController = new PartnerController()
 
 const router = express.Router()
 
-router.get('/', partnerController.getPartners)
+router.get('/', partnerController.searchPartners)
 router.post('/', partnerController.createPartner)
 router.get('/:id', partnerController.getPartnerById)
 router.put('/:id', partnerController.updatePartner)

@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { Product } from "./Product";
 import { Partner } from "./Partner";
 import { Warehouse } from "./Warehouse";
+import { WarehouseStock } from "./WarehouseStock";
 
 @Entity()
 export class ProductBatch {
@@ -26,6 +27,6 @@ export class ProductBatch {
   @ManyToOne(() => Partner, (partner) => partner.suppliedBatches)
   supplier: Partner;
 
-  @ManyToOne(() => Warehouse, (warehouse) => warehouse.batches)
-  warehouse: Warehouse;
+  @ManyToOne(() => WarehouseStock, (warehouseStock) => warehouseStock.batches)
+  warehouseStock: WarehouseStock;
 }

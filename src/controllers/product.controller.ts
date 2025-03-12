@@ -79,4 +79,13 @@ export class ProductController {
       return res.status(500).json({ message: "Failed to delete product", error: (error as Error).message });
     }
   }
+
+  async getAllCategories(req: Request, res: Response): Promise<any> {
+    try {
+      const result = await productService.getAllCategories();
+      return res.status(200).json({ message: "Get all categories successfully!", categories: result });
+    } catch (error) {
+      return res.status(500).json({ message: "Failed to get categories", error: (error as Error).message });
+    }
+  }
 }

@@ -17,7 +17,22 @@ export class PartnerController {
   // Get all partners with pagination
   async getPartners(req: Request, res: Response): Promise<any> {
     try {
-      const partners = await partnerService.getAllPartners();
+      const page = parseInt(req.query.page as string);
+      const pageSize = parseInt(req.query.pageSize as string);
+      const partners = await partnerService.getPartners(page, pageSize);
+      return res.status(200).json({ message: "Fetched partners successfully!", ...partners });
+    } catch (error) {
+      return res.status(500).json({ message: "Failed to fetch partners", error: (error as Error).message });
+    }
+  }
+
+  async searchPartners(req: Request, res: Response): Promise<any> {
+    try {
+      const query = req.query.q as string;
+      const role = req.query.role as string;
+      const page = parseInt(req.query.page as string);
+      const pageSize = parseInt(req.query.pageSize as string);
+      const partners = await partnerService.searchPartners(query, role, page, pageSize);
       return res.status(200).json({ message: "Fetched partners successfully!", ...partners });
     } catch (error) {
       return res.status(500).json({ message: "Failed to fetch partners", error: (error as Error).message });

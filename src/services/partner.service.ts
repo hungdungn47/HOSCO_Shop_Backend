@@ -38,7 +38,7 @@ export class PartnerService {
     }
   }
 
-  async searchPartners(query?: string, role?: string, page: number = 1, pageSize: number = 10): Promise<{ partners: Partner[], total: number }> {
+  async searchPartners(query?: string, role?: string, page?: number, pageSize?: number): Promise<{ partners: Partner[], total: number }> {
     const whereClause: any = [];
 
     if (query) {
@@ -52,13 +52,21 @@ export class PartnerService {
       whereClause.push({ role });
     }
 
-    const [partners, total] = await this.partnerRepository.findAndCount({
-      where: query && role ? { role, ...whereClause } : whereClause.length > 0 ? whereClause : undefined,
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
+    if (page && pageSize) {
+      const [partners, total] = await this.partnerRepository.findAndCount({
+        where: query && role ? { role, ...whereClause } : whereClause.length > 0 ? whereClause : undefined,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      });
 
-    return { partners, total };
+      return { partners, total };
+    } else {
+      const [partners, total] = await this.partnerRepository.findAndCount({
+        where: query && role ? { role, ...whereClause } : whereClause.length > 0 ? whereClause : undefined
+      });
+
+      return { partners, total };
+    }
   }
 
   async getPartnerById(id: number) {

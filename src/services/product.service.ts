@@ -69,4 +69,13 @@ export class ProductService {
     const result = await this.productRepository.delete(id);
     return result.affected !== 0;
   }
+
+  async getAllCategories(): Promise<string[]> {
+    const categories = await this.productRepository
+      .createQueryBuilder("product")
+      .select("DISTINCT product.category", "category") // Get unique categories
+      .getRawMany();
+
+    return categories.map(c => c.category);
+  }
 }
