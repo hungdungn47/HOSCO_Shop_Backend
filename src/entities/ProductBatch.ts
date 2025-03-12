@@ -17,6 +17,9 @@ export class ProductBatch {
   @Column("decimal", { precision: 10, scale: 2 })
   purchasePrice: number;
 
+  @Column("text")
+  purchaseNote: string;
+
   @ManyToOne(() => Product, (product) => product.batches)
   product: Product;
 

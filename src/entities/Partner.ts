@@ -20,7 +20,7 @@ export class Partner {
   @Column()
   phone: string
 
-  @Column()
+  @Column({ nullable: true })
   email: string
 
   @Column()

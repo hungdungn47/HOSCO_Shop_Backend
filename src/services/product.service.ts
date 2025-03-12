@@ -32,12 +32,22 @@ export class ProductService {
   }
 
   // Search products by name or ID with pagination
-  async searchProducts(query: string, page: number = 1, pageSize: number = 10): Promise<{ products: Product[], total: number }> {
+  async searchProducts(query?: string, category?: string, page: number = 1, pageSize: number = 10): Promise<{ products: Product[], total: number }> {
+    const whereClause: any = [];
+
+    if (query) {
+      whereClause.push(
+        { id: ILike(`%${query}%`) },
+        { name: ILike(`%${query}%`) }
+      );
+    }
+
+    if (category) {
+      whereClause.push({ category });
+    }
+
     const [products, total] = await this.productRepository.findAndCount({
-      where: [
-        { id: ILike(`%${query}%`) }, // Search by ID
-        { name: ILike(`%${query}%`) } // Search by name
-      ],
+      where: query && category ? { category, ...whereClause } : whereClause.length > 0 ? whereClause : undefined,
       skip: (page - 1) * pageSize,
       take: pageSize,
     });

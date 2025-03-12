@@ -43,14 +43,11 @@ export class ProductController {
   async searchProducts(req: Request, res: Response): Promise<any> {
     try {
       const query = req.query.q as string;
+      const category = req.query.category as string;
       const page = parseInt(req.query.page as string) || 1;
       const pageSize = parseInt(req.query.pageSize as string) || 10;
 
-      if (!query) {
-        return res.status(400).json({ message: "Search query is required" });
-      }
-
-      const products = await productService.searchProducts(query, page, pageSize);
+      const products = await productService.searchProducts(query, category, page, pageSize);
       return res.status(200).json({ message: "Search completed successfully!", products });
     } catch (error) {
       return res.status(500).json({ message: "Failed to search products", error: (error as Error).message });
