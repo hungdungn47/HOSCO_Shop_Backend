@@ -1,4 +1,4 @@
-import { ILike, Repository } from "typeorm";
+import { ILike, In, Repository } from "typeorm";
 import { AppDataSource } from "../config/datasource";
 import { Product } from "../entities/Product";
 
@@ -31,8 +31,49 @@ export class ProductService {
     return await this.productRepository.findOne({ where: { id }, relations: ["batches", "transactionItems"] });
   }
 
-  // Search products by name or ID with pagination
-  async searchProducts(query?: string, category?: string, page: number = 1, pageSize: number = 10): Promise<{ products: Product[], total: number }> {
+  async searchProducts(
+    query?: string,
+    categories?: string[],
+    page: number = 1,
+    pageSize: number = 10
+  ): Promise<{ products: Product[], total: number }> {
+    // Build where clause
+    let whereClause: any = {};
+
+    // Handle text search condition (OR between text fields)
+    if (query) {
+      whereClause = [
+        { id: ILike(`%${query}%`) },
+        { name: ILike(`%${query}%`) }
+      ];
+    }
+
+    // Handle categories condition
+    if (categories && categories.length > 0) {
+      // If we already have query conditions, we need to add the category condition to each
+      if (query) {
+        whereClause = whereClause.map((condition: any) => ({
+          ...condition,
+          category: In(categories)
+        }));
+      } else {
+        // If no query, just filter by categories
+        whereClause = { category: In(categories) };
+      }
+    }
+
+    // Execute the query
+    const [products, total] = await this.productRepository.findAndCount({
+      where: whereClause,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+
+    return { products, total };
+  }
+
+
+  async searchProductsNameAndId(query?: string, category?: string, page: number = 1, pageSize: number = 10) {
     const whereClause: any = [];
 
     if (query) {
@@ -45,14 +86,14 @@ export class ProductService {
     if (category) {
       whereClause.push({ category });
     }
-
-    const [products, total] = await this.productRepository.findAndCount({
+    const products = await this.productRepository.find({
+      select: ['id', 'name'],
       where: query && category ? { category, ...whereClause } : whereClause.length > 0 ? whereClause : undefined,
       skip: (page - 1) * pageSize,
       take: pageSize,
-    });
+    })
 
-    return { products, total };
+    return products;
   }
 
   // Update a product
