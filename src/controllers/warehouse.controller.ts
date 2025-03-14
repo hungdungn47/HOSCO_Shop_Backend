@@ -15,7 +15,7 @@ export class WarehouseController {
 
   static async getById(req: Request, res: Response, next: NextFunction): Promise<any> {
     const { id } = req.params;
-    const warehouse = await warehouseService.getWarehouseById(id);
+    const warehouse = await warehouseService.getWarehouseProductStock(id);
     if (!warehouse) return res.status(404).json({ message: "Warehouse not found" });
     res.status(200).json({
       message: "Get warehouse successfully",
@@ -56,5 +56,10 @@ export class WarehouseController {
     if (!deleted) return res.status(404).json({ message: "Warehouse not found" });
 
     res.json({ message: "Warehouse deleted successfully" });
+  }
+
+  static async getAllWarehouseStock(req: Request, res: Response): Promise<any> {
+    const result = await warehouseService.getAllWarehouseStock();
+    res.json({ message: "Get all warehouse stock", result });
   }
 }

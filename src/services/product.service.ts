@@ -1,18 +1,44 @@
 import { ILike, In, Repository } from "typeorm";
 import { AppDataSource } from "../config/datasource";
 import { Product } from "../entities/Product";
+import { WarehouseStock } from "../entities/WarehouseStock";
 
 export class ProductService {
   private productRepository: Repository<Product>;
+  private warehouseStockRepository: Repository<WarehouseStock>;
 
   constructor() {
     this.productRepository = AppDataSource.getRepository(Product);
+    this.warehouseStockRepository = AppDataSource.getRepository(WarehouseStock);
   }
 
   // Create a new product
   async createProduct(data: Partial<Product>): Promise<Product> {
     const product = this.productRepository.create(data);
     return await this.productRepository.save(product);
+  }
+
+  // Modified method to get stock quantity for a specific product in all warehouses
+  // plus the total quantity across all warehouses
+  async getProductStockByProductId(productId: string): Promise<{ warehouseStocks: any[], totalQuantity: number }> {
+    const warehouseStocks = await this.warehouseStockRepository.createQueryBuilder("warehouseStock")
+      .leftJoinAndSelect("warehouseStock.warehouse", "warehouse")
+      .leftJoinAndSelect("warehouseStock.product", "product")
+      .where("product.id = :productId", { productId })
+      .select([
+        "warehouse.id",
+        "warehouse.name",
+        "warehouseStock.totalQuantity"
+      ])
+      .getMany();
+
+    // Calculate total quantity across all warehouses
+    const totalQuantity = warehouseStocks.reduce((sum, stock) => sum + stock.totalQuantity, 0);
+
+    return {
+      warehouseStocks,
+      totalQuantity
+    };
   }
 
   // Get all products with optional pagination
@@ -118,5 +144,20 @@ export class ProductService {
       .getRawMany();
 
     return categories.map(c => c.category);
+  }
+  async getAutocompleteSuggestions(query: string): Promise<string[]> {
+    if (!query) return [];
+
+    const suggestions = await this.productRepository.query(
+      `SELECT DISTINCT TOP 10
+          LEFT(name, CHARINDEX(' ', name + ' ', CHARINDEX(@0, name)) - 1) AS suggestion
+       FROM product
+       WHERE name LIKE @0 + '%'
+       GROUP BY LEFT(name, CHARINDEX(' ', name + ' ', CHARINDEX(@0, name)) - 1)
+       ORDER BY name`,
+      [query]
+    );
+
+    return suggestions.map((row: { suggestion: string }) => row.suggestion);
   }
 }
