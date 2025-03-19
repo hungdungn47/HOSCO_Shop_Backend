@@ -19,7 +19,7 @@ export class MyTransaction {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column("date")
+  @Column({ type: "datetime2", default: () => "CURRENT_TIMESTAMP" })
   transactionDate: Date;
 
   @Column({ type: "varchar", enum: TransactionType, default: TransactionType.SALE })

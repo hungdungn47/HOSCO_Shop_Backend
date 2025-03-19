@@ -46,7 +46,7 @@ export class ProductService {
     const [products, total] = await this.productRepository.findAndCount({
       skip: (page - 1) * pageSize,
       take: pageSize,
-      relations: ["batches", "transactionItems"]
+      select: ["id", "name", "retailPrice", "wholesalePrice"], // Only necessary fields
     });
 
     return { products, total };
@@ -93,6 +93,7 @@ export class ProductService {
       where: whereClause,
       skip: (page - 1) * pageSize,
       take: pageSize,
+      select: ["id", "name", "retailPrice", "wholesalePrice", "category", "imageUrl"],
     });
 
     return { products, total };

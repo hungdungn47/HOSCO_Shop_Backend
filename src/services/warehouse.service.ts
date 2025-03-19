@@ -7,7 +7,9 @@ const warehouseStockRepository = AppDataSource.getRepository(WarehouseStock);
 
 export class WarehouseService {
   async getAllWarehouses(): Promise<Warehouse[]> {
-    return await warehouseRepository.find();
+    return await warehouseRepository.find({
+      select: ['id', 'name', 'location'] // Only select fields you need
+    });
   }
 
   async getWarehouseById(id: string): Promise<Warehouse | null> {
