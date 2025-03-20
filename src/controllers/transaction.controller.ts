@@ -55,6 +55,15 @@ export class TransactionController {
     }
   }
 
+  static async getTransactionById(req: Request, res: Response): Promise<any> {
+    const transactionId = Number(req.params.id);
+    const result = await TransactionService.getTransactionById(transactionId);
+    return res.status(200).json({
+      message: 'success',
+      result
+    })
+  }
+
   static async createSaleTransaction(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
       const {

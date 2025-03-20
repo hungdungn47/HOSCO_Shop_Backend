@@ -316,4 +316,14 @@ export class TransactionService {
       };
     });
   }
+
+  static async getTransactionById(transactionId: number): Promise<MyTransaction> {
+    let transactionRepository: Repository<MyTransaction> = AppDataSource.getRepository(MyTransaction);
+    console.log("Transaction ID: ", transactionId);
+    const res = await transactionRepository.findOne({
+      where: { id: transactionId },
+      relations: ["partner", "items", "items.product"],
+    })
+    return res!;
+  }
 }
