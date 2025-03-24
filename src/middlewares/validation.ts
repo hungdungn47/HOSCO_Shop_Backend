@@ -3,32 +3,6 @@ import Joi from 'joi';
 import { PaymentMethod } from '../entities/MyTransaction';
 import { DiscountUnit } from '../entities/Product';
 /**
- * Create a validation middleware using Joi schema
- * @param schema Joi schema for validation
- */
-// const createValidationMiddleware = async (schema: Joi.ObjectSchema): Promise<any> => {
-//   return (req: Request, res: Response, next: NextFunction) => {
-//     const { error } = schema.validate(req.body, {
-//       abortEarly: false,
-//       stripUnknown: true,
-//       allowUnknown: false
-//     });
-
-//     if (error) {
-//       const errorMessage = error.details.map(detail => detail.message).join(', ');
-//       return res.status(400).json({
-//         success: false,
-//         error: 'Validation Error',
-//         details: error.details,
-//         message: errorMessage
-//       });
-//     }
-
-//     next();
-//   };
-// };
-
-/**
  * Joi validation schema for creating a sale transaction
  */
 const createSaleTransactionSchema = Joi.object({
